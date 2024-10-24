@@ -1,0 +1,22 @@
+---
+title: "Test"
+author: "Yixin"
+date: "2024-10-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(sf)
+library(tidyverse)
+```
+
+```{r}
+boulder <- st_read("C:/Users/MAC/Desktop/EAS_648/lab_01/BoulderSocialMedia/BoulderSocialMedia.shp")
+boulder
+```
+
