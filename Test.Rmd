@@ -1,5 +1,5 @@
 ---
-title: "Test"
+title: "EAS 648, Lab 01"
 author: "Yixin"
 date: "2024-10-24"
 output: html_document
@@ -9,14 +9,172 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+## Initialize
+### Import packages
+```{r, echo=TRUE, results='hide'}
 library(ggplot2)
 library(sf)
 library(tidyverse)
 ```
+*the result was hidden*
 
-```{r}
+### Import data
+```{r, echo=TRUE, results='hide'}
 boulder <- st_read("C:/Users/MAC/Desktop/EAS_648/lab_01/BoulderSocialMedia/BoulderSocialMedia.shp")
-boulder
+head(boulder,5)
+```
+*the result was hidden*
+## View Data
+### Spatial Distribution
+```{r}
+# project the data using an appropriate projection for Colorado
+boulder = st_transform(boulder, 26753) 
+
+# View the distribution of the point
+ggplot() +
+    geom_sf(data =boulder,
+            title="Boulder Social Media",
+            color="blue",
+            size=0.05,
+            fill = NA, 
+            alpha = 0.8, 
+            na.rm = TRUE,
+            show.legend = NA,
+            inherit.aes = TRUE)+
+    theme_linedraw()
+```
+### Attributes
+#### Source category and terrain
+```{r}
+# DB: indicates whether the point is a social media location (Flickr or Panramio) or a point in the park
+boulder %>%
+  mutate(high_elev = ifelse(DB == "Flickr", "Flickr", "Panramio"))%>% 
+  ggplot() +
+  geom_sf(aes(color=high_elev),
+          fill = NA,
+          size=0.02,
+          alpha = 0.8, 
+          na.rm = TRUE)  +  
+  theme_linedraw()
+
+# PT_Elev: Elevation
+ggplot() +
+    geom_sf(data =boulder, 
+            aes(color=PT_Elev),
+            fill = NA, 
+            size=0.02,
+            alpha = 0.8,
+            na.rm = TRUE) +
+  scale_colour_gradient(low = "black", high = "skyblue") +  
+  theme_linedraw()
+
+# extent: extent that can be viewed at each point estimated through viewshed analysis
+ggplot() +
+    geom_sf(data =boulder, 
+            aes(color=PT_Elev),
+            fill = NA, 
+            size=0.02,
+            alpha = 0.8,
+            na.rm = TRUE) +
+  scale_colour_gradientn(colours = terrain.colors(10)) +  
+  theme_linedraw()
 ```
 
+#### Distance to different facilities and landuse type
+```{r}
+# Climb_dist: distance to nearest climbing wall
+ggplot() +
+    geom_sf(data =boulder, 
+            aes(color=Climb_dist),
+            fill = NA, 
+            size=0.02,
+            alpha = 0.8,
+            na.rm = TRUE) +
+  scale_colour_gradient(low = "red", high = "black") +  
+  ggtitle("Distance to nearest climbing wall")+
+  theme_linedraw()
+
+# TrailH_Dis: distance to hiking trails
+ggplot() +
+    geom_sf(data =boulder, 
+            aes(color=TrailH_Dis),
+            fill = NA, 
+            size=0.02,
+            alpha = 0.8,
+            na.rm = TRUE) +
+  scale_colour_gradient(low = "red", high = "black") + 
+  ggtitle("Distance to hiking trails")+
+  theme_linedraw()
+
+# NatMrk_Dis: distance to natural landmark
+ggplot() +
+    geom_sf(data =boulder, 
+            aes(color=NatMrk_Dis),
+            fill = NA, 
+            size=0.02,
+            alpha = 0.8,
+            na.rm = TRUE) +
+  scale_colour_gradient(low = "red", high = "black") +  
+  ggtitle("Distance to natural landmark")+
+  theme_linedraw()
+
+# Trails_dis: distance to walking trails
+ggplot() +
+    geom_sf(data =boulder, 
+            aes(color=Trails_dis),
+            fill = NA, 
+            size=0.02,
+            alpha = 0.8,
+            na.rm = TRUE) +
+  scale_colour_gradient(low = "red", high = "black") +  
+  ggtitle("Distance to walking trails")+
+  theme_linedraw()
+
+# Bike_dis: distance to biking trails
+ggplot() +
+    geom_sf(data =boulder, 
+            aes(color=Bike_dis),
+            fill = NA, 
+            size=0.02,
+            alpha = 0.8,
+            na.rm = TRUE) +
+  scale_colour_gradient(low = "red", high = "black") +  
+  ggtitle("Distance to biking trails")+
+  theme_linedraw()
+
+# PrarDg_Dis: distance to prairie dog mounds
+ggplot() +
+    geom_sf(data =boulder, 
+            aes(color=PrarDg_Dis),
+            fill = NA, 
+            size=0.02,
+            alpha = 0.8,
+            na.rm = TRUE) +
+  scale_colour_gradient(low = "red", high = "black") +  
+  ggtitle("Distance to prairie dog mounds")+
+  theme_linedraw()
+
+# Hydro_dis: distance to lakes, rivers and creeks
+ggplot() +
+    geom_sf(data =boulder, 
+            aes(color=Hydro_dis),
+            fill = NA, 
+            size=0.02,
+            alpha = 0.8,
+            na.rm = TRUE) +
+  scale_colour_gradient(low = "red", high = "black") +  
+  ggtitle("Distance to lakes, rivers and creeks")+
+  theme_linedraw()
+
+# Street_dis: distance to streets and parking lots
+ggplot() +
+    geom_sf(data =boulder, 
+            aes(color=Street_dis),
+            fill = NA, 
+            size=0.02,
+            alpha = 0.8,
+            na.rm = TRUE) +
+  scale_colour_gradient(low = "red", high = "black") + 
+  ggtitle("Distance to streets and parking lots")+
+  theme_linedraw()
+```
