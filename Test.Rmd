@@ -178,3 +178,99 @@ ggplot() +
   ggtitle("Distance to streets and parking lots")+
   theme_linedraw()
 ```
+## Analysis
+### Accesibility
+Since the spacial distribution indicated the location that people take photos, it comes to a question that how accessible the location is?
+Let's say the nearest distance to a traffic facility (i.e. hiking trails, walking trails, biking trails, streets and parking lots) represent the accessibility of a location. And the smaller the distance is , the higher the accessibility is.
+Then we can calculate the accessibility by the equations below:
+$$MinDistance_i = min(TrailHDis_i, Trailsdis_i, Bikedis_i, Streetdis_i)$$
+$$NormolizedMinDisatance_i = (MinDistance_i-min(MinDistance))/(max(MinDistance)-min(MinDistance))$$
+$$Accessibility_i=1-NormolizedMinDisatance_i$$
+```{r, echo=TRUE, results='hide'}
+# Calculate Accessibility
+boulder <- boulder %>%
+  mutate(MinDis = pmin(TrailH_Dis, Trails_dis, Bike_dis, Street_dis, na.rm = TRUE))%>%
+  mutate(NorMinDis = (MinDis - min(MinDis, na.rm = TRUE)) / (max(MinDis, na.rm = TRUE) - min(MinDis, na.rm = TRUE))) %>%
+  mutate(Accessibility = 1 - NorMinDis)
+
+head(boulder)
+
+```
+
+*the result was hidden*
+```{r}
+# Visualize Accessibility
+ggplot() +
+    geom_sf(data =boulder, 
+            aes(color=Accessibility),
+            fill = NA, 
+            size=0.02,
+            alpha = 0.8,
+            na.rm = TRUE) +
+  scale_colour_gradient(low = "black", high = "skyblue") + 
+  ggtitle("Accessibility")+
+  theme_linedraw()
+```
+Then here we know how accessible these locations are!
+
+### Desirability Index
+But were they worth going?
+Let's calculate a Desirability Index based on the distance to the attractions(i.e. climbing wall, natural landmark, prairie dog mounds, lakes, rivers and creeks) to represent the attractiveness of each location.
+We can calculate the accessibility by the equations below:
+$$Far_i=Climbdist_i+NatMrkDis_i+PrarDgDis_i+Hydrodis_i$$
+$$NormalizedFar_i=(Far_i-min(Far))/(max(Far)-min(Far))$$
+$$Desirability Index=1-NormalizedFar_i$$
+
+```{r, echo=TRUE, results='hide'}
+# Calculate Desirability Index
+boulder <- boulder %>%
+  mutate(Far = Climb_dist+NatMrk_Dis+PrarDg_Dis+Hydro_dis)%>%
+  mutate(NorFar = (Far - min(Far, na.rm = TRUE)) / (max(Far, na.rm = TRUE) - min(Far, na.rm = TRUE))) %>%
+  mutate(Desirability = 1 - NorFar)
+
+head(boulder)
+```
+*the result was hidden*
+
+```{r}
+# Visualize Desirability Index
+ggplot() +
+    geom_sf(data =boulder, 
+            aes(color=Desirability),
+            fill = NA, 
+            size=0.02,
+            alpha = 0.8,
+            na.rm = TRUE) +
+  scale_colour_gradient(low = "black", high = "skyblue") + 
+  ggtitle("Desirability Index")+
+  theme_linedraw()
+```
+### Best Locations
+Now we know how accesible and attractive a location is. It might be a good idea to select some place that are best to go based on this two indexs.
+```{r}
+# Create the categories
+boulder <- boulder %>%
+  mutate(category = case_when(
+    Accessibility > 0.7 & Desirability > 0.7 ~ "Best",
+    Accessibility > 0.7 & Desirability <= 0.7 ~ "Accessible but less attractive",
+    Accessibility <= 0.7 & Desirability > 0.7 ~ "Attractive but remote",
+    TRUE ~ "Less desirable and accessible"
+  ))
+
+# Define custom colors
+custom_colors <- c("Best" = "#e24f59",
+                   "Accessible but less attractive" = "#feb489",
+                   "Attractive but remote" = "#358e75",
+                   "Less desirable and accessible" = "#61414a")
+
+# Plot with custom colors
+ggplot(boulder) +
+  geom_sf(aes(color = category), size = 0.02, alpha = 0.8) +
+  scale_color_manual(
+    values = custom_colors,
+    limits = c("Best", "Accessible but less attractive", "Attractive but remote", "Less desirable and accessible")
+  ) +
+  labs(title = "Accessibility and Desirability Index Categories") +
+  guides(color = guide_legend(override.aes = list(size = 1)))+
+  theme_linedraw()
+```
