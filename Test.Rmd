@@ -1,6 +1,6 @@
 ---
 title: "EAS 648, Lab 01"
-author: "Yixin"
+author: "Yixin Hu"
 date: "2024-10-24"
 output: html_document
 ---
@@ -8,7 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
+# Geovisualization and Explanation
 ## Initialize
 ### Import packages
 ```{r}
@@ -281,3 +281,16 @@ ggplot(boulder) +
 ```
 
 Finally, we have a map of 4 categories of locations, which indicates the accessibility and the attractiveness of the places in Colorado.
+
+# Questions
+**1. Discuss the advantages and challenges associated with an open data science approach. Provide an example based on this week’s reading. (1-2 paragraphs)**
+
+Open data science fosters greater transparency and accelerates innovation by allowing multiple researchers to analyze, validate, and expand upon available datasets. In the reading, there is an example in human geography, this can enhance understanding of social patterns, urbanization, and mobility.
+
+However, challenges include data privacy concerns, as much of the data used in human geography involves sensitive personal information. Kitchin also emphasizes that data quality, ethical usage, and standardization are crucial for open data to benefit the field while minimizing potential misuse and ensuring valid interpretations. This balance between openness and ethical responsibility is key in leveraging open data effectively in human geography research. 
+
+
+
+2. Create a markdown document that showcases an analysis of this week’s data or any other dataset of your choice. Include descriptive text that explains your analysis, and incorporate figures and geovisualizations.Include 1 chart and 1 map. Structure and explain your analysis with text, headings, highlights, images and other markdown basics.
+
+Bonus: Capture a screenshot of the history of your Git commits. Share your strategy for utilizing Git in your workflow.
