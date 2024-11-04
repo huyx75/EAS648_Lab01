@@ -11,19 +11,20 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Initialize
 ### Import packages
-```{r, echo=TRUE, results='hide'}
+```{r}
 library(ggplot2)
 library(sf)
 library(tidyverse)
 ```
-*the result was hidden*
 
 ### Import data
 ```{r, echo=TRUE, results='hide'}
 boulder <- st_read("C:/Users/MAC/Desktop/EAS_648/lab_01/BoulderSocialMedia/BoulderSocialMedia.shp")
 head(boulder,5)
 ```
+
 *the result was hidden*
+
 ## View Data
 ### Spatial Distribution
 ```{r}
@@ -43,6 +44,7 @@ ggplot() +
             inherit.aes = TRUE)+
     theme_linedraw()
 ```
+
 ### Attributes
 #### Source category and terrain
 ```{r}
@@ -178,6 +180,7 @@ ggplot() +
   ggtitle("Distance to streets and parking lots")+
   theme_linedraw()
 ```
+
 ## Analysis
 ### Accesibility
 Since the spacial distribution indicated the location that people take photos, it comes to a question that how accessible the location is?
@@ -211,6 +214,7 @@ ggplot() +
   ggtitle("Accessibility")+
   theme_linedraw()
 ```
+
 Then here we know how accessible these locations are!
 
 ### Desirability Index
@@ -245,6 +249,7 @@ ggplot() +
   ggtitle("Desirability Index")+
   theme_linedraw()
 ```
+
 ### Best Locations
 Now we know how accesible and attractive a location is. It might be a good idea to select some place that are best to go based on this two indexs.
 ```{r}
@@ -274,3 +279,5 @@ ggplot(boulder) +
   guides(color = guide_legend(override.aes = list(size = 1)))+
   theme_linedraw()
 ```
+
+Finally, we have a map of 4 categories of locations, which indicates the accessibility and the attractiveness of the places in Colorado.
